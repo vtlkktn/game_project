@@ -37,27 +37,7 @@ class Level:
     def run(self, dt):
         self.display_surface.fill('black')
         self.all_sprites.custom_draw(self.player)
-        self.draw_core(self.core_rect)
         self.all_sprites.update(dt)
-
-    def draw_core(self, core_rect):
-        core_hp = self.core.current_health
-        bar_width = 5  # Фіксована ширина риски
-        bar_height = core_hp / self.core.max_health * core_rect.height
-        bar_color = (0, 255, 0)  # Зелений колір для риски
-        bar_rect = pygame.Rect(core_rect.right + 5, core_rect.top, bar_width, bar_height)  # Прямокутник для риски
-
-        # Малювання риски
-        pygame.draw.rect(self.display_surface, bar_color, bar_rect)
-
-        # Опціонально можна намалювати контур риски для більшої видимості
-        pygame.draw.rect(self.display_surface, (0, 0, 0), bar_rect, 1)
-
-        # Додавання прямокутника як атрибуту для майбутнього використання
-        self.core_rect = core_rect
-
-
-
 
 
 class CameraGroup(pygame.sprite.Group):
