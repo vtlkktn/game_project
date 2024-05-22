@@ -7,12 +7,13 @@ from sprites import Generic
 class Level:
     def __init__(self):
         self.display_surface = pygame.display.get_surface()
+        self.all_sprites = pygame.sprite.Group()
         self.all_sprites = CameraGroup()
 
         self.setup()
 
     def setup(self):
-        self.player = Player((640, 360), self.all_sprites)
+        self.player = Player((1100, 800), self.all_sprites)
         Generic(
             pos = (0, 0),
             surf = pygame.image.load('ground.png').convert_alpha(),
@@ -34,7 +35,7 @@ class CameraGroup(pygame.sprite.Group):
     def custom_draw(self, player):
         self.offset.x = SCREEN_WIDTH / 2 - player.rect.centerx
         self.offset.y = SCREEN_HEIGHT / 2 - player.rect.centery
-        
+
         for layer in sorted(LAYERS.values()):
             for sprite in self.sprites():
                 if sprite.z == layer:

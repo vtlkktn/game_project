@@ -70,11 +70,21 @@ class Player(pygame.sprite.Sprite):
         if self.direction.magnitude() > 0:
             self.direction = self.direction.normalize()
 
-        self.pos.x += self.direction.x * self.speed * dt
-        self.rect.centerx = self.pos.x
+        new_pos = self.pos + self.direction * self.speed * dt
 
-        self.pos.y += self.direction.y * self.speed * dt
-        self.rect.centery = self.pos.y
+        map_width = 5000  
+        map_height = 5000
+
+    # Обмежуємо рух гравця в межах карті
+        if 0 <= new_pos.x <= map_width:
+            self.pos.x = new_pos.x
+
+        if 0 <= new_pos.y <= map_height:
+            self.pos.y = new_pos.y
+
+
+        self.rect.center = self.pos
+
 
     def update(self, dt):
         self.input()
@@ -82,19 +92,3 @@ class Player(pygame.sprite.Sprite):
 
         self.move(dt)
         self.animate(dt)
-
-    def move(self, dt):
-        if self.direction.magnitude() > 0:
-            self.direction = self.direction.normalize()
-
-        new_pos = self.pos + self.direction * self.speed * dt
-
-        # Перевірка на межі екрану
-        if 0 <= new_pos.x <= SCREEN_WIDTH:
-            self.pos.x = new_pos.x
-
-        if 0 <= new_pos.y <= SCREEN_HEIGHT:
-            self.pos.y = new_pos.y
-
-        self.rect.center = self.pos
-
