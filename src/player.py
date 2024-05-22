@@ -24,6 +24,7 @@ class Player(pygame.sprite.Sprite):
         self.animations = {
             'up': [], 'down': [], 'left': [], 'right': [],
             'right_idle': [], 'left_idle': [], 'up_idle': [], 'down_idle': [],
+            'up_right': [], 'down_left': [], 'down_right': [], 'up_left': [],
         }
 
         for animation in self.animations.keys():
@@ -36,7 +37,7 @@ class Player(pygame.sprite.Sprite):
         return scaled_frames
 
     def animate(self, dt):
-        self.frame_index += 1 * dt
+        self.frame_index += 30 * dt
         if self.frame_index >= len(self.animations[self.status]):
             self.frame_index = 0
         self.image = self.animations[self.status][int(self.frame_index)]
@@ -62,6 +63,24 @@ class Player(pygame.sprite.Sprite):
         else:
             self.direction.x = 0
 
+        if keys[pygame.K_UP] and keys[pygame.K_RIGHT]:
+            self.direction.x = 1
+            self.direction.y = -1
+            self.status = 'up_right'
+        elif keys[pygame.K_UP] and keys[pygame.K_LEFT]:
+            self.direction.x = -1
+            self.direction.y = -1
+            self.status = 'up_left'
+
+        if keys[pygame.K_DOWN] and keys[pygame.K_RIGHT]:
+            self.direction.x = 1
+            self.direction.y = 1
+            self.status = 'down_right'
+        elif keys[pygame.K_DOWN] and keys[pygame.K_LEFT]:
+            self.direction.x = -1
+            self.direction.y = 1
+            self.status = 'down_left'
+        
     def get_status(self):
         if self.direction.magnitude() == 0:
             self.status = self.status.split('_')[0] + '_idle'
@@ -75,7 +94,6 @@ class Player(pygame.sprite.Sprite):
         map_width = 5000  
         map_height = 5000
 
-    # Обмежуємо рух гравця в межах карті
         if 0 <= new_pos.x <= map_width:
             self.pos.x = new_pos.x
 
