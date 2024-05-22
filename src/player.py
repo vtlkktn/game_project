@@ -1,6 +1,6 @@
 import pygame
 from settings import *
-from src.utils import import_folder
+from utils import import_folder
 
 
 class Player(pygame.sprite.Sprite):
@@ -14,6 +14,7 @@ class Player(pygame.sprite.Sprite):
 
         self.image = self.animations[self.status][self.frame_index]
         self.rect = self.image.get_rect(center=pos)
+        self.z = LAYERS['main']
 
         self.direction = pygame.math.Vector2()
         self.pos = pygame.math.Vector2(self.rect.center)
@@ -81,3 +82,19 @@ class Player(pygame.sprite.Sprite):
 
         self.move(dt)
         self.animate(dt)
+
+    def move(self, dt):
+        if self.direction.magnitude() > 0:
+            self.direction = self.direction.normalize()
+
+        new_pos = self.pos + self.direction * self.speed * dt
+
+        # Перевірка на межі екрану
+        if 0 <= new_pos.x <= SCREEN_WIDTH:
+            self.pos.x = new_pos.x
+
+        if 0 <= new_pos.y <= SCREEN_HEIGHT:
+            self.pos.y = new_pos.y
+
+        self.rect.center = self.pos
+

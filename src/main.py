@@ -10,7 +10,7 @@ class Game:
         pygame.display.set_caption('Game')
         self.clock = pygame.time.Clock()
         self.level = Level()
-
+ 
     def run(self):
         while True:
             for event in pygame.event.get():
