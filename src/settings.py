@@ -7,5 +7,7 @@ TILE_SIZE = 64
 LAYERS = {
     'ground': 0,
     'core': 1,
-    'main': 2
+    'bar': 2,
+    'arrow': 3,
+    'main': 3
 }

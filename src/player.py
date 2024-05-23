@@ -8,7 +8,7 @@ class Player(pygame.sprite.Sprite):
         super().__init__(group)
 
         self.size = (50, 50)
-        self.import_assets()
+        self.animations = self.import_assets()
         self.status = 'up_idle'
         self.frame_index = 0
 
@@ -21,15 +21,17 @@ class Player(pygame.sprite.Sprite):
         self.speed = 200
 
     def import_assets(self):
-        self.animations = {
+        animations = {
             'up': [], 'down': [], 'left': [], 'right': [],
             'right_idle': [], 'left_idle': [], 'up_idle': [], 'down_idle': [],
             'up_right': [], 'down_left': [], 'down_right': [], 'up_left': [],
+            'up_right_idle': [], 'down_left_idle': [], 'down_right_idle': [], 'up_left_idle': []
         }
 
-        for animation in self.animations.keys():
-            full_path = '../assets/images/character/' + animation
-            self.animations[animation] = self.load_and_scale_images(full_path)
+        for animation in animations.keys():
+            full_path = f'../assets/images/character/{animation}'
+            animations[animation] = self.load_and_scale_images(full_path)
+        return animations
 
     def load_and_scale_images(self, path):
         frames = import_folder(path)
@@ -37,7 +39,7 @@ class Player(pygame.sprite.Sprite):
         return scaled_frames
 
     def animate(self, dt):
-        self.frame_index += 30 * dt
+        self.frame_index += 0.1 * dt
         if self.frame_index >= len(self.animations[self.status]):
             self.frame_index = 0
         self.image = self.animations[self.status][int(self.frame_index)]
@@ -47,43 +49,43 @@ class Player(pygame.sprite.Sprite):
 
         if keys[pygame.K_UP]:
             self.direction.y = -1
-            self.status = 'up'
+            if keys[pygame.K_RIGHT]:
+                self.direction.x = 1
+                self.status = 'up_right'
+            elif keys[pygame.K_LEFT]:
+                self.direction.x = -1
+                self.status = 'up_left'
+            else:
+                self.direction.x = 0
+                self.status = 'up'
         elif keys[pygame.K_DOWN]:
             self.direction.y = 1
-            self.status = 'down'
+            if keys[pygame.K_RIGHT]:
+                self.direction.x = 1
+                self.status = 'down_right'
+            elif keys[pygame.K_LEFT]:
+                self.direction.x = -1
+                self.status = 'down_left'
+            else:
+                self.direction.x = 0
+                self.status = 'down'
         else:
             self.direction.y = 0
+            if keys[pygame.K_RIGHT]:
+                self.direction.x = 1
+                self.status = 'right'
+            elif keys[pygame.K_LEFT]:
+                self.direction.x = -1
+                self.status = 'left'
+            else:
+                self.direction.x = 0
 
-        if keys[pygame.K_RIGHT]:
-            self.direction.x = 1
-            self.status = 'right'
-        elif keys[pygame.K_LEFT]:
-            self.direction.x = -1
-            self.status = 'left'
-        else:
-            self.direction.x = 0
+        self.status = self.get_status()
 
-        if keys[pygame.K_UP] and keys[pygame.K_RIGHT]:
-            self.direction.x = 1
-            self.direction.y = -1
-            self.status = 'up_right'
-        elif keys[pygame.K_UP] and keys[pygame.K_LEFT]:
-            self.direction.x = -1
-            self.direction.y = -1
-            self.status = 'up_left'
-
-        if keys[pygame.K_DOWN] and keys[pygame.K_RIGHT]:
-            self.direction.x = 1
-            self.direction.y = 1
-            self.status = 'down_right'
-        elif keys[pygame.K_DOWN] and keys[pygame.K_LEFT]:
-            self.direction.x = -1
-            self.direction.y = 1
-            self.status = 'down_left'
-        
     def get_status(self):
         if self.direction.magnitude() == 0:
-            self.status = self.status.split('_')[0] + '_idle'
+            return self.status.split('_')[0] + '_idle'
+        return self.status
 
     def move(self, dt):
         if self.direction.magnitude() > 0:
@@ -91,7 +93,7 @@ class Player(pygame.sprite.Sprite):
 
         new_pos = self.pos + self.direction * self.speed * dt
 
-        map_width = 5000  
+        map_width = 5000
         map_height = 5000
 
         if 0 <= new_pos.x <= map_width:
@@ -100,9 +102,7 @@ class Player(pygame.sprite.Sprite):
         if 0 <= new_pos.y <= map_height:
             self.pos.y = new_pos.y
 
-
         self.rect.center = self.pos
-
 
     def update(self, dt):
         self.input()
