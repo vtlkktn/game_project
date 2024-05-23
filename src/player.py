@@ -7,7 +7,7 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, pos, group):
         super().__init__(group)
 
-        self.size = (50, 50)
+        self.size = (75, 75)
         self.import_assets()
         self.status = 'up_idle'
         self.frame_index = 0
