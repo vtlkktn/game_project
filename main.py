@@ -58,7 +58,7 @@ class AdventureGame:
             'gem': pygame.mixer.Sound('assets/sfx/gem.mp3'),
         }
 
-        self.vol_music = 0.05
+        self.vol_music = 0.008
         self.vol_ambience = 0.6
         self.vol_explosion = 0.8
         self.vol_jump = 0.7
