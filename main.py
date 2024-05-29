@@ -126,8 +126,6 @@ class AdventureGame:
             self.scroll[1] += (self.player.rect_pos.centery - self.display.get_height() / 2 - self.scroll[1]) / 90
             render_scroll = (int(self.scroll[0]), int(self.scroll[1]))
 
-            Text(self.display, f'Рахунок:{self.score}/{self.max_score}', self.get_font(8), (10, 10)).render()
-
             if int(self.scroll[1]) >= 18:
                 self.scroll[1] = 18
 
@@ -192,7 +190,6 @@ class AdventureGame:
                 enemy.update(self.tilemap)
                 enemy.render(self.display, offset=render_scroll)
 
-
                 if self.player.rect_pos.colliderect(enemy.rect_pos):
                     self.collided += 1
 
@@ -212,6 +209,8 @@ class AdventureGame:
             if not self.dead:
                 self.player.update(self.tilemap, (self.movement[1] - self.movement[0], 0))
                 self.player.render(self.display, offset=render_scroll)
+
+            Text(self.display, f'Рахунок:{self.score}/{self.max_score}', self.get_font(8), (10, 10)).render()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -306,7 +305,7 @@ class AdventureGame:
             if self.transition < 0:
                 self.transition += 1
 
-            Text(self.display, 'Осінні Пригоди Котеняти', self.get_font(15), (screen_center_x-160, 50)).render()
+            Text(self.display, 'Осінні Пригоди Котеняти', self.get_font(15), (screen_center_x - 160, 50)).render()
 
             play_button.render()
             if play_button.done == True:
